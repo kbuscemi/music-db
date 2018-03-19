@@ -1,30 +1,32 @@
-var credit = require('../models/credit');
-var request = require('request');
-const rootURL = 'https://api.spotify.com/v1/';
+var Credit = require('../models/credit');
 
-
-function newCredit(req, res) {
-    res.render('credits/profile')
-}
-function show(req, res) {
-    res.render('credits/profile')
+function index(req, res) {
+    req.user.populate('credits', function (err) {
+        res.render('credits/index', { user: req.user });
+    });
 }
 
+function searchCredit(req, res) {
+    res.render('users/search-results', { user: req.user });
+};
 
-// function searchSpotify(req, res) {
-//     var options = {
-//         url: `${rootURL}search?q=${req.body.name}&type=artist`,
-//         headers: {
-//             'Authorization': `Bearer ${process.env.SPOTIFY_TOKEN}`
-//         }
-//     };
-//     request(options, function (err, response, body) {
-//         var artistData = JSON.parse(body);
-//         console.log(artistData);
-//         res.render('users/search-results', {artistData});
-//     });
-// }
+function edit(req, res, next) {
+    Credit.findById(req.params.id, function(err, credit) {
+        if (err) return next(err);
+        res.render('credits/edit', { credit, user: req.user });
+    });
+}
+
+function updateCredit(req, res) {
+    Credit.findByIdAndUpdate(req.params.id, req.body, function(err, credit) {
+        req.user.save();
+        res.redirect('/credits')
+    });
+}
 
 module.exports = {
-    new: newCredit,
+    index,
+    edit,
+    updateCredit,
+    searchCredit
 }

@@ -1,39 +1,28 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Musc DB</title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-  <script>
-      window.fbAsyncInit = function() {
-        FB.init({
-          appId      : '{700481500341249}',
-          cookie     : true,
-          xfbml      : true,
-          version    : '{v2.12}'
-        });
-          
-        FB.AppEvents.logPageView();   
-          
-      };
-    
-      (function(d, s, id){
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) {return;}
-        js = d.createElement(s); js.id = id;
-        js.src = "https://connect.facebook.net/en_US/sdk.js";
-        fjs.parentNode.insertBefore(js, fjs);
-      }(document, 'script', 'facebook-jssdk'));
-    </script>
+<%- include('./_partials/header') %>
 
-<h1>Music DB</h1>
+<div class="navbar-fixed valign-wrapper">
+  <nav class="index">
+    <a href="/" class="brand-logo">Music DB</a>
+    <ul class="right">
+      <li>Professional Musician?</li>
+      <li><a href="/auth/facebook"><i class="material-icons left">account_circle</i>Log In</a></li>
+    </ul>
+  </nav>
+</div>
 
+<main class="index-main valign-wrapper">
+  <div id="index-content">
+    <h1>Search Musician Credits</h1>
+    <p>(it's kinda like the IMDB for musicians)</p>
+    <div class="row col 12">
+        <div class="input-field col s12">
+          <input type="text" id="autocomplete-input" class="autocomplete search-spotify" oninput="searchSpotify()">
+          <label for="autocomplete-input left-align">Start typing...</label>
+          <a href="/users/search-results" class="waves-effect waves-light btn">Search</a>
+        </div>
+    </div>
+  </div>
+</main>
 
-<ul>
-<li><a href="/logout">Logout</a></li>
-<li><a href="/auth/facebook">Login</a></li>
-</ul>
-    
-  </body>
+</body>
 </html>

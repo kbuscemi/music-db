@@ -7,17 +7,19 @@ var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
 var session = require('express-session');
 var passport = require('passport');
+var cors = require('cors');
 
 require('dotenv').config();
+require('./config/database');
+require('./config/passport');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
-// var credits = require('./routes/credits');
-
+var credits = require('./routes/credits');
+var api = require('./routes/api');
 var app = express();
 
-require('./config/database');
-require('./config/passport');
+app.use(cors());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -27,6 +29,7 @@ app.set('view engine', 'ejs');
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(logger('dev'));
+app.use(methodOverride('_method', { methods: ['POST', 'GET'] }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -36,12 +39,13 @@ app.use(session({
   saveUninitialized: true
 }));
 app.use(passport.initialize());
+app.use((req, res, next) => {req.user = req.session.user; next()})
 app.use(passport.session());
-
 
 app.use('/', index);
 app.use('/', users);
-// app.use('/')
+app.use('/credits', credits);
+app.use('/', api);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
